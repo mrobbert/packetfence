@@ -36,7 +36,7 @@ Depends: ${misc:Depends}, vlan, make,
  libdbd-mysql-perl, libfile-tail-perl, libnetwork-ipv4addr-perl,
  libiptables-parse-perl, libiptables-chainmgr-perl, iptables (>= 1.4.0),
  liblwp-useragent-determined-perl, 
- libnet-netmask-perl, libnet-pcap-perl, libnet-snmp-perl, libsnmp-perl,
+ libnet-netmask-perl, libnet-dhcp-perl, libnet-snmp-perl, libsnmp-perl,
  libnet-telnet-cisco-perl, libparse-recdescent-perl,
  libregexp-common-email-address-perl, libregexp-common-time-perl,
  libperl-critic-perl, libreadonly-xs-perl, libhtml-template-perl,
@@ -54,6 +54,7 @@ Depends: ${misc:Depends}, vlan, make,
  libconfig-general-perl, libproc-processtable-perl, libfile-flock-perl, libperl-version-perl,
  perl-modules,
  liblinux-fd-perl, liblinux-inotify2-perl, libfile-touch-perl,
+ libtie-hash-expire-perl,
 # hard-coded to specific version because v3 broke the API and we haven't ported to it yet
 # see #1313: Port our Net-Appliance-Session to the version 3 API
 # http://packetfence.org/bugs/view.php?id=1313
