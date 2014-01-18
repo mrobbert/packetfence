@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 #!/bin/sh
+=======
+>>>>>>> 694c695c313f4c79ac1f46e705193dbe9933639b
 #
 # Database maintenance and backup
 #
@@ -21,10 +24,16 @@ DB_USER='pf';
 DB_PWD='';
 DB_NAME='pf';
 PF_DIRECTORY='/usr/local/pf/'
+<<<<<<< HEAD
 PF_DIRECTORY_EXCLUDED='/usr/local/pf/logs'
 BACKUP_DIRECTORY='/root/backup/'
 BACKUP_DB_FILENAME='packetfence-db-dump'
 BACKUP_PF_FILENAME='packetfence-files-dump'
+=======
+BACKUP_DIRECTORY='/root/backup/'
+BACKUP_DB_FILENAME='packetfence-db-dump'
+BACKUP_PF_FILENAME=packetfence-files-dump-`date +%F_%Hh%M`.tgz
+>>>>>>> 694c695c313f4c79ac1f46e705193dbe9933639b
 ARCHIVE_DIRECTORY=$BACKUP_DIRECTORY
 ARCHIVE_DB_FILENAME='packetfence-archive'
 
@@ -39,12 +48,20 @@ ARCHIVE_DB_FILENAME='packetfence-archive'
     fi
 
 # Backup pf File
+<<<<<<< HEAD
 	current_tgz=$BACKUP_DIRECTORY/$BACKUP_PF_FILENAME-`date +%F_%Hh%M`.tgz
      if [ ! -f $BACKUP_DIRECTORY$BACKUP_PF_FILENAME ]; then
          tar -czf $current_tgz $PF_DIRECTORY --exclude=$PF_DIRECTORY_EXCLUDED
                 echo -e $BACKUP_PF_FILENAME "have been created in  $BACKUP_DIRECTORY \n"
                 find $BACKUP_DIRECTORY -name "packetfence-files-dump-*.tgz" -mtime +$NB_DAYS_TO_KEEP_FILES -print0 | xargs -0r rm -f
                 echo -e "$BACKUP_PF_FILENAME older than $NB_DAYS_TO_KEEP_FILES days have been removed. \n"
+=======
+     if [ ! -f $BACKUP_DIRECTORY.$BACKUP_PF_FILENAME ]; then
+         tar cvzf $BACKUP_DIRECTORY$BACKUP_PF_FILENAME $PF_DIRECTORY
+                echo -e $BACKUP_PF_FILENAME "have been created in  $BACKUP_DIRECTORY \n"
+                find $BACKUP_DIRECTORY -name "$BACKUP_PF_FILENAME-*" -mtime +$NB_DAYS_TO_KEEP -print0 | xargs -0r rm -f
+                echo -e "$BACKUP_PF_FILENAME older than $NB_DAYS_TO_KEEP days have been removed. \n"
+>>>>>>> 694c695c313f4c79ac1f46e705193dbe9933639b
         else
                 echo -e $BACKUP_DIRECTORY$BACKUP_PF_FILENAME ", file already created. \n"
      fi
