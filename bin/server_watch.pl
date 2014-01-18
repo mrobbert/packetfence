@@ -76,19 +76,19 @@ sub ifaceCheck {
 	my @ifaceList =	getIfaceList ();
 	
 	foreach (@ifaceList) {
-		my $iface = $_;
-		open(my $fh, "<", $iface)
-			or die "cannot open < $iface: $!";
+		my $ifaceFile = $_;
+
+		open(my $fh, "<", $ifaceFile)
+			or die "cannot open < $ifaceFile: $!";
 		foreach (my @lines = <$fh>) {
-			if ($_ !~ /ONBOOT=YES/i) {
-				print "$iface \n";
-			} else {
-			print color 'green';
-			print "All interfaces clear \n";
+			if ($_ =~ /ONBOOT=YES/i) {
+				print "$ifaceFile \n";
 			}
-		print color 'reset';
 		}
 	}
+	print color 'green';
+	print "All interfaces clear \n";
+	print color 'reset';
 }
 
 ifaceCheck ();
