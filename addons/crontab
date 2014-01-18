@@ -1,26 +1,15 @@
-<<<<<<< HEAD
 # Crontab 20131212
 #
 # This script clears location_log/ location_log_history
 # clears the accounting information
 # backup PacketFence database and files
-=======
-# Crontab 20130711_1
-#
-# This script clears location_log/ location_log_history
-# clears the accounting information
->>>>>>> 694c695c313f4c79ac1f46e705193dbe9933639b
 30 00 * * * [ -f /var/run/mysqld/mysqld.pid ] && /usr/local/pf/addons/database-backup-and-maintenance.sh
 #
 # This script cleans /tmp/cgisess_*
 */30 * * * * find /tmp -name "cgisess_*" -mmin +30 -exec rm -f {} \;
 #
 # Sync
-<<<<<<< HEAD
 */15 * * * *  if [ ! -f /var/run/mysqld/mysqld.pid ]; then rsync --delete -ogDprtuv --exclude=var/* --exclude=logs/* 192.168.0.2:/usr/local/pf /usr/local; cat /usr/local/pf/conf/pf.conf | sed s/ip=192\.168\.0\.2/ip=192\.168\.0\.3/ > /usr/local/pf/conf/pf.conf.new;mv -f /usr/local/pf/conf/pf.conf.new /usr/local/pf/conf/pf.conf;chown pf.pf /usr/local/pf/conf/pf.conf; fi
-=======
-*/15 * * * *  if [ ! -f /var/run/mysqld/mysqld.pid ]; then rsync --delete -ogDprtuv --exclude=var/session/* --exclude=logs/* 10.10.10.186:/usr/local/pf /usr/local; fi
->>>>>>> 694c695c313f4c79ac1f46e705193dbe9933639b
 #
 # Watchdog
 */1 * * * * [ -f /var/run/mysqld/mysqld.pid ] &&  [ -z $(/sbin/pidof -x pfdns) ] && /usr/local/pf/bin/pfcmd service pfdns restart
