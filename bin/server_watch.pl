@@ -98,5 +98,57 @@ sub ifaceCheck {
 	}
 }
 
-ifaceCheck ();
+
+=item * logrotateCheck - Checks PacketFence lograte configuration 
+
+=cut
+
+sub logrotateCheck {
+	my $logrotateFile = '/etc/logrotate.d/packetfence';
+	my ($copytruncate,$weekly,$daily,$rotation,$delaycompress);
+
+	open(my $fh, "<", $logrotateFile)
+		or die "cannot open < $logrotateFile: $!";
+	foreach (my @lines = <$fh>) {
+		print $_;
+		if ($_ =~ /weekly/im) {
+			print color 'blue';
+			print $_;
+	        print color 'reset';
+		}
+		if ($_ =~ /daily/im) {
+			print color 'blue';
+			print $_;
+	        print color 'reset';
+		}
+		if ($_ =~ /rotate/im) {
+			print color 'blue';
+			print $_;
+	        print color 'reset';
+		}
+		if ($_ =~ /delaycompress/im) {
+			print color 'red';
+	        print "Your backlog will wait 1 rotation before be compressed ! \n";
+	        print color 'reset';
+		} else {
+			print color 'green';
+			print "Delaycompress is disable\n";
+			print color 'reset';
+		}
+		if ($_ =~ /copytruncate/im) {
+			print color 'green';
+			print "Copytruncate is enable\n";
+			print color 'reset';
+			last;
+		} else {
+			print color 'red';
+			print "Copytruncate is disable !";
+			print color 'reset';
+			last;
+		}
+	}
+}
+
+logrotateCheck();
+#ifaceCheck ();
 #baseToolsCheck ();
