@@ -77,18 +77,25 @@ sub ifaceCheck {
 	
 	foreach (@ifaceList) {
 		my $ifaceFile = $_;
+		my $onbootIface;
 
 		open(my $fh, "<", $ifaceFile)
 			or die "cannot open < $ifaceFile: $!";
 		foreach (my @lines = <$fh>) {
-			if ($_ =~ /ONBOOT=YES/i) {
-				print "$ifaceFile \n";
+			if ($_ =~ /ONBOOT=YES/im) {
+				$onbootIface = 1;	
 			}
 		}
+		if (defined ($onbootIface) && $onbootIface == 1) {
+			print color 'green';
+			print "Interface $ifaceFile OK \n";
+			print color 'reset';
+		} else {
+			print color 'red';
+            print "Interface $ifaceFile not started on boot \n";
+            print color 'reset';
+		}
 	}
-	print color 'green';
-	print "All interfaces clear \n";
-	print color 'reset';
 }
 
 ifaceCheck ();
