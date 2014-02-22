@@ -101,54 +101,99 @@ sub ifaceCheck {
 
 =item * logrotateCheck - Checks PacketFence lograte configuration 
 
+ weekly
+ rotate 52
+ missingok
+ compress
+ delaycompress
+ su pf pf
+ copytruncate
+
 =cut
 
 sub logrotateCheck {
 	my $logrotateFile = '/etc/logrotate.d/packetfence';
-	my ($copytruncate,$weekly,$daily,$rotation,$delaycompress);
-
+	#my ($copytruncate,$weekly,$daily,$rotation,$delaycompress);
+	
 	open(my $fh, "<", $logrotateFile)
 		or die "cannot open < $logrotateFile: $!";
-	foreach (my @lines = <$fh>) {
-		print $_;
-		if ($_ =~ /weekly/im) {
+	my @lines = <$fh>;
+	foreach (@lines) {
+		my $line = $_;
+		if ($line =~ /weekly/i) {
 			print color 'blue';
-			print $_;
+			print "The rotation time unit is: weekly \n";
 	        print color 'reset';
 		}
-		if ($_ =~ /daily/im) {
+		if ($line =~ /daily/i) {
 			print color 'blue';
-			print $_;
+			print "The rotation time unit is daily \n";
 	        print color 'reset';
 		}
-		if ($_ =~ /rotate/im) {
+		if ($line =~ /rotate ([0-9].*)/i) {
+			my $rotate = $1;
 			print color 'blue';
-			print $_;
+			print "The rotation happens each $rotate rotation time unit \n";
 	        print color 'reset';
 		}
-		if ($_ =~ /delaycompress/im) {
+		if ($line =~ /delaycompress/i) {
 			print color 'red';
 	        print "Your backlog will wait 1 rotation before be compressed ! \n";
 	        print color 'reset';
-		} else {
-			print color 'green';
-			print "Delaycompress is disable\n";
-			print color 'reset';
 		}
-		if ($_ =~ /copytruncate/im) {
+		if ($line =~ /copytruncate/i) {
 			print color 'green';
-			print "Copytruncate is enable\n";
+			print "Copytruncate is enable \n";
 			print color 'reset';
-			last;
-		} else {
-			print color 'red';
-			print "Copytruncate is disable !";
-			print color 'reset';
-			last;
 		}
 	}
 }
 
-logrotateCheck();
-#ifaceCheck ();
+=item * startupServices - Check of PacketFence required service are right set up
+chkconfig --list | egrep "iptables|ntpd |drbd|mysqld|corosync|pacemaker|smb|winbind|memcached|crond|monit|packetfence "
+corosync        0:off   1:off   2:on    3:on    4:on    5:on    6:off
+crond           0:off   1:off   2:on    3:on    4:on    5:on    6:off
+drbd            0:off   1:off   2:off   3:off   4:off   5:off   6:off
+iptables        0:off   1:off   2:off   3:off   4:off   5:off   6:off
+memcached       0:off   1:off   2:off   3:off   4:off   5:off   6:off
+monit           0:off   1:off   2:off   3:off   4:off   5:off   6:off
+mysqld          0:off   1:off   2:off   3:off   4:off   5:off   6:off
+ntpd            0:off   1:off   2:on    3:on    4:on    5:on    6:off
+monit           0:off   1:off   2:off   3:off   4:off   5:off   6:off
+packetfence     0:off   1:off   2:off   3:off   4:off   5:off   6:off
+smb             0:off   1:off   2:off   3:on    4:on    5:on    6:off
+winbind         0:off   1:off   2:off   3:on    4:on    5:on    6:off
+=cut
+
+sub startupServices {
+	my ($resultCmd, @services, @lines);
+	@services=("iptables", "ntpd", "drbd", "mysqld", "corosync", "pacemaker", "smb", "winbind", "memcached", "crond", "monit", "packetfence");
+	$resultCmd  = `chkconfig --list`;
+	@lines = split(/^/m, $resultCmd);
+	
+	foreach (@lines) {
+		my $line = $_;
+		f
+	}
+	if ($resultCmd =~ /corosync/mi) {
+		print color 'green';
+		print "The rotation time unit is: weekly \n";
+		print color 'reset';
+	}
+}
+
+=item * vmtoolsCheck - Checks if the server is a VM and if the vmtools are installed and running.
+
+=cut
+
+sub vmtoolsCheck {
+
+}
+
+
+#### Run sub
 #baseToolsCheck ();
+#ifaceCheck ();
+#logrotateCheck();
+startupServices ();
+#vmtoolsCheck ();
