@@ -16,6 +16,7 @@ Creates state health report of you PacketFence server
 
 use strict;
 use warnings;
+use feature 'say';
 
 use Term::ANSIColor;
 
@@ -166,19 +167,42 @@ winbind         0:off   1:off   2:off   3:on    4:on    5:on    6:off
 =cut
 
 sub startupServices {
-	my ($resultCmd, @services, @lines);
-	@services=("iptables", "ntpd", "drbd", "mysqld", "corosync", "pacemaker", "smb", "winbind", "memcached", "crond", "monit", "packetfence");
-	$resultCmd  = `chkconfig --list`;
-	@lines = split(/^/m, $resultCmd);
+	my @services = (
+	"iptables:off",
+	"ntpd:on",
+	"drbd:off",
+	"mysqld:off",
+	"corosync:on",
+	"pacemaker:off",
+	"smb:on",
+	"winbind:on",
+	"memcached:off",
+	"crond:on",
+	"monit:off",
+	"packetfence:off",
+	);
+	my @resultCmd  = `chkconfig --list`;
+
+	my %config;
+	for ( @resultCmd ) { 
+	 	my ( $k, $v ) = ( split /\s+/ )[0,4];
+        $config{$k} = $v;
+    }
 	
-	foreach (@lines) {
-		my $line = $_;
-		f
-	}
-	if ($resultCmd =~ /corosync/mi) {
-		print color 'green';
-		print "The rotation time unit is: weekly \n";
-		print color 'reset';
+	
+	for (@services) {
+		my ($s,$v) = split(/:/,$_);
+		next if not exists $config{$s};
+
+		if ($config{$s} eq '3:' . $v) {
+			print color 'green';
+			say "The service $s is $v at boot";
+			print color 'reset';
+		} else {
+			print color 'red';
+			say "The service $s is $v at boot";
+			print color 'reset';
+		}
 	}
 }
 
@@ -192,8 +216,8 @@ sub vmtoolsCheck {
 
 
 #### Run sub
-#baseToolsCheck ();
-#ifaceCheck ();
-#logrotateCheck();
+baseToolsCheck ();
+ifaceCheck ();
+logrotateCheck();
 startupServices ();
 #vmtoolsCheck ();
